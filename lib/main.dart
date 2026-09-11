@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_portfolio/router_config.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,15 +12,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return ShadApp.router(
+      title: 'Idris Labidi',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+      theme: ShadThemeData(
+        //TODO
       ),
-      home: const Center(
-        child: Text("Hello world! I am Idris"),
-      ),
+      routerConfig: router,
     );
   }
 }
