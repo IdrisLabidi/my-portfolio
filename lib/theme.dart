@@ -26,4 +26,6 @@ final ShadThemeData appTheme = ShadThemeData(
     selection: Colors.black12,
   ),
   radius: BorderRadius.circular(8),
+  // Optional: plug in a grotesque/bold display font like the screenshot
+  textTheme: ShadTextTheme(family: 'Verdana'),
 );
