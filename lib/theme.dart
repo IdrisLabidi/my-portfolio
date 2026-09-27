@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 final ShadThemeData appTheme = ShadThemeData(
-  brightness: Brightness.light,
+  brightness: Brightness.dark,
   colorScheme: const ShadColorScheme(
     background: Colors.white,
     foreground: Colors.black,
