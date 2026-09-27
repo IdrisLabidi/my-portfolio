@@ -2,14 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_portfolio/theme.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class Shell extends StatelessWidget {
-  const Shell({
-    required this.child,
-    required this.currentPath,
-    super.key,
-  });
+  const Shell({required this.child, required this.currentPath, super.key});
 
   final Widget child;
   final String currentPath;
@@ -19,90 +16,55 @@ class Shell extends StatelessWidget {
     final isDesktop = MediaQuery.sizeOf(context).width > 768;
 
     return Scaffold(
-      appBar: isDesktop ? SiteHeader(currentPath: currentPath) : AppBar(),
+      extendBodyBehindAppBar: true,
+      appBar: isDesktop
+          ? SiteHeader(currentPath: currentPath)
+          : const MobileHeader(),
       // Mobile Navigation Drawer
       drawer: isDesktop
           ? null
           : Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-
-            ListTile(
-              title: const Text("Home"),
-              selected: currentPath == '/',
-              onTap: () {
-                Navigator.pop(context);
-                context.go('/');
-              },
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    title: const Text("Home"),
+                    selected: currentPath == '/',
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.go('/');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Projects"),
+                    selected: currentPath == '/all-projects',
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.go('/all-projects');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("About"),
+                    selected: currentPath == '/about-me',
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.go('/about-me');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Contact"),
+                    selected: currentPath == '/contact',
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.go('/contact');
+                    },
+                  ),
+                ],
+              ),
             ),
-            ListTile(
-              title: const Text("Projects"),
-              selected: currentPath == '/all-projects',
-              onTap: () {
-                Navigator.pop(context);
-                context.go('/all-projects');
-              },
-            ),
-            ListTile(
-              title: const Text("About"),
-              selected: currentPath == '/about-me',
-              onTap: () {
-                Navigator.pop(context);
-                context.go('/about-me');
-              },
-            ),
-            ListTile(
-              title: const Text("Contact"),
-              selected: currentPath == '/contact',
-              onTap: () {
-                Navigator.pop(context);
-                context.go('/contact');
-              },
-            ),
-          ],
-        ),
-      ),
       body: AppBackground(
-             isDark: Theme.of(context).brightness == Brightness.dark,
-             child: child,
-           ),
-    );
-  }
-}
-
-class _NavButton extends StatelessWidget {
-  const _NavButton({
-    required this.label,
-    required this.path,
-    required this.currentPath,
-  });
-
-  final String label;
-  final String path;
-  final String currentPath;
-
-  @override
-  Widget build(BuildContext context) {
-    final isActive = currentPath == path;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: ShadButton.ghost(
-        onPressed: () => context.go(path),
-        decoration: ShadDecoration(
-          border: isActive
-              ? const ShadBorder(
-            bottom: ShadBorderSide(width: 2, color: Colors.grey),
-          )
-              : null,
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
+        isDark: Theme.of(context).brightness == Brightness.dark,
+        child: child,
       ),
     );
   }
@@ -125,21 +87,134 @@ class SiteHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      bottom: false,
+      child: SizedBox(
+        height: preferredSize.height - MediaQuery.paddingOf(context).top,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            _NavigationPill(currentPath: currentPath, items: _items),
+            const Positioned(right: 24, child: ThemeToggleButton()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MobileHeader extends StatelessWidget implements PreferredSizeWidget {
+  const MobileHeader({super.key});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(64);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 16),
+          child: ThemeToggleButton(),
+        ),
+      ],
+    );
+  }
+}
+
+class _NavigationPill extends StatelessWidget {
+  const _NavigationPill({required this.currentPath, required this.items});
+
+  final String currentPath;
+  final Map<String, String> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      alignment: Alignment.center,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1100),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: _items.entries.map((e) {
-            return _NavItem(
-              label: e.key,
-              isActive: currentPath == e.value,
-              onTap: () => context.go(e.value),
-            );
-          }).toList(),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: (isDark ? Colors.white : Colors.white).withValues(
+          alpha: isDark ? 0.10 : 0.62,
+        ),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: isDark ? 0.22 : 0.78),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.24 : 0.10),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.white.withValues(alpha: isDark ? 0.08 : 0.50),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items.entries.map((entry) {
+          return _NavItem(
+            label: entry.key,
+            isActive: currentPath == entry.value,
+            onTap: () => context.go(entry.value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class ThemeToggleButton extends StatelessWidget {
+  const ThemeToggleButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final controller = ThemeScope.of(context);
+    return Tooltip(
+      message: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+      child: Semantics(
+        button: true,
+        label: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+        child: Material(
+          color: Colors.transparent,
+          child: Ink(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: (isDark ? Colors.white : Colors.white).withValues(
+                alpha: isDark ? 0.13 : 0.72,
+              ),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: isDark ? 0.24 : 0.85),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.24 : 0.10),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: controller.toggle,
+              child: Padding(
+                padding: const EdgeInsets.all(11),
+                child: Icon(
+                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                  size: 19,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -178,7 +253,13 @@ class _NavItemState extends State<_NavItem> {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: highlighted ? const Color(0xFFF4F4F5) : Colors.transparent,
+            color: highlighted
+                ? Colors.white.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark
+                        ? 0.18
+                        : 0.72,
+                  )
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
@@ -186,7 +267,7 @@ class _NavItemState extends State<_NavItem> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -200,33 +281,12 @@ class Header extends StatelessWidget {
 
   final String currentPath;
 
-  static const _items = {
-    'Home': '/',
-    'About me': '/about-me',
-    'Contact': '/contact',
-    'All projects': '/all-projects',
-  };
-
   @override
   Widget build(BuildContext context) {
-    return const ShadMenubar(
-        items: [
-        ]
-    );
+    return const ShadMenubar(items: []);
   }
 }
 
-
-/// Recreates the pszostak.pl hero background:
-/// diagonal gradient wash + two blurred glow orbs + a subtle dot grid.
-///
-/// Usage:
-///   Scaffold(
-///     body: AppBackground(
-///       isDark: Theme.of(context).brightness == Brightness.dark,
-///       child: YourPageContent(),
-///     ),
-///   )
 class AppBackground extends StatelessWidget {
   final Widget child;
   final bool isDark;
@@ -261,7 +321,9 @@ class AppBackground extends StatelessWidget {
                   top: -120,
                   left: -120,
                   child: _GlowOrb(
-                    color: isDark ? const Color(0xFF6D28D9) : const Color(0xFFA78BFA),
+                    color: isDark
+                        ? const Color(0xFF6D28D9)
+                        : const Color(0xFFA78BFA),
                     size: 420,
                     opacity: isDark ? 0.30 : 0.45,
                   ),
@@ -270,7 +332,9 @@ class AppBackground extends StatelessWidget {
                   bottom: -180,
                   right: -180,
                   child: _GlowOrb(
-                    color: isDark ? const Color(0xFFBE185D) : const Color(0xFFF9A8D4),
+                    color: isDark
+                        ? const Color(0xFFBE185D)
+                        : const Color(0xFFF9A8D4),
                     size: 520,
                     opacity: isDark ? 0.25 : 0.50,
                   ),
@@ -284,15 +348,15 @@ class AppBackground extends StatelessWidget {
         Positioned.fill(
           child: CustomPaint(
             painter: _DotGridPainter(
-              dotColor: (isDark ? Colors.white : Colors.black)
-                  .withOpacity(isDark ? 0.07 : 0.09),
+              dotColor: (isDark ? Colors.white : Colors.black).withValues(
+                alpha: isDark ? 0.07 : 0.09,
+              ),
               spacing: 28,
               radius: 1.2,
             ),
           ),
         ),
 
-        // 4. Actual page content on top
         child,
       ],
     );
@@ -319,7 +383,7 @@ class _GlowOrb extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: color.withOpacity(opacity),
+          color: color.withValues(alpha: opacity),
         ),
       ),
     );
