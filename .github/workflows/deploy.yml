@@ -32,7 +32,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Flutter Web App
-        run: flutter build web --release --base-href "/my-portfolio/"
+        run: flutter build web --release --web-renderer html --base-href "/my-portfolio/"
 
       - name: Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3
