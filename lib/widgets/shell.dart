@@ -111,16 +111,26 @@ class MobileHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0,
-      actions: const [
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-          child: ThemeToggleButton(),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final hasRoomForMenu = constraints.maxWidth >= 120;
+        final hasRoomForThemeToggle = constraints.maxWidth >= 72;
+
+        return AppBar(
+          automaticallyImplyLeading: hasRoomForMenu,
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          actions: hasRoomForThemeToggle
+              ? const [
+                  Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: ThemeToggleButton(),
+                  ),
+                ]
+              : null,
+        );
+      },
     );
   }
 }

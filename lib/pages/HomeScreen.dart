@@ -41,7 +41,7 @@ class _HeroSection extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(isCompact ? 24 : 32),
+      padding: EdgeInsets.all(isCompact ? 28 : 48),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withOpacity(0.68),
         borderRadius: BorderRadius.circular(28),
@@ -70,9 +70,11 @@ class _HeroSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: _HeroCopy(theme: theme, context: context)),
-                const SizedBox(width: 28),
-                _HeroAvatar(theme: theme),
+                Expanded(
+                  child: _HeroCopy(theme: theme, context: context),
+                ),
+                const SizedBox(width: 48),
+                _HeroAvatar(theme: theme, size: 320),
               ],
             ),
     );
@@ -97,7 +99,7 @@ class _HeroCopy extends StatelessWidget {
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
-            'Software engineering student',
+            'Software engineering student · Tunis, Tunisia',
             style: theme.textTheme.labelLarge?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w600,
@@ -114,7 +116,7 @@ class _HeroCopy extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'I design and build simple, useful software experiences with a strong focus on clean code, usability, and continuous learning.',
+          'I am an engineering student focused on backend systems, secure APIs, modern web applications, and scalable software architecture.',
           style: theme.textTheme.titleMedium?.copyWith(
             height: 1.6,
             color: theme.colorScheme.onSurface.withOpacity(0.75),
@@ -143,24 +145,18 @@ class _HeroCopy extends StatelessWidget {
 }
 
 class _HeroAvatar extends StatelessWidget {
-  const _HeroAvatar({required this.theme});
+  const _HeroAvatar({required this.theme, this.size = 260});
 
   final ThemeData theme;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 220,
-      height: 220,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.secondary,
-          ],
-        ),
+        color: theme.colorScheme.primary,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
@@ -170,13 +166,24 @@ class _HeroAvatar extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
-        child: Text(
-          'IL',
-          style: theme.textTheme.displayLarge?.copyWith(
-            color: theme.colorScheme.onPrimary,
-            fontWeight: FontWeight.w800,
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: Image.network(
+          Uri.base.resolve('profile.jpg').toString(),
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Text(
+                'IL',
+                style: theme.textTheme.displayLarge?.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -191,9 +198,9 @@ class _InfoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      _InfoItem(label: 'Focus', value: 'Full-stack thinking'),
-      _InfoItem(label: 'Learning', value: 'Flutter & software engineering'),
-      _InfoItem(label: 'Approach', value: 'Readable, scalable, practical'),
+      _InfoItem(label: 'Currently', value: 'Engineering cycle · FST Tunis'),
+      _InfoItem(label: 'Speciality', value: 'Backend & distributed systems'),
+      _InfoItem(label: 'Toolkit', value: 'Java · Kotlin · Spring · Angular'),
     ];
 
     return GridView.builder(
@@ -253,244 +260,6 @@ class _InfoItem extends StatelessWidget {
   }
 }
 
-class _SectionHeading extends StatelessWidget {
-  const _SectionHeading({required this.eyebrow, required this.title});
-
-  final String eyebrow;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          eyebrow,
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.primary,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          title,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.8,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FocusCards extends StatelessWidget {
-  const _FocusCards({required this.isCompact});
-
-  final bool isCompact;
-
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      _FocusCard(
-        title: 'Product thinking',
-        description: 'Turning ideas into interfaces and workflows that feel useful from the first interaction.',
-      ),
-      _FocusCard(
-        title: 'Clean development',
-        description: 'Writing maintainable code, structuring projects clearly, and learning from iteration.',
-      ),
-      _FocusCard(
-        title: 'Continuous growth',
-        description: 'Exploring new tools, frameworks, and engineering practices to become a stronger builder.',
-      ),
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isCompact ? 1 : 3,
-        crossAxisSpacing: 18,
-        mainAxisSpacing: 18,
-        childAspectRatio: isCompact ? 1.8 : 1.5,
-      ),
-      itemBuilder: (context, index) => items[index],
-    );
-  }
-}
-
-class _FocusCard extends StatelessWidget {
-  const _FocusCard({required this.title, required this.description});
-
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.68),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withOpacity(0.7),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.auto_awesome_rounded,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            description,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              height: 1.6,
-              color: theme.colorScheme.onSurface.withOpacity(0.75),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProjectGrid extends StatelessWidget {
-  const _ProjectGrid({required this.isCompact});
-
-  final bool isCompact;
-
-  @override
-  Widget build(BuildContext context) {
-    final projects = [
-      _ProjectCard(
-        title: 'Portfolio website',
-        description: 'A personal portfolio experience crafted to showcase ideas, projects, and ambitions clearly.',
-        tag: 'Flutter',
-      ),
-      _ProjectCard(
-        title: 'Study companion',
-        description: 'A productivity-focused tool for organizing tasks, notes, and learning goals in one place.',
-        tag: 'Productivity',
-      ),
-      _ProjectCard(
-        title: 'Automation ideas',
-        description: 'Exploring systems that reduce repetitive work and make digital tasks feel smoother and faster.',
-        tag: 'Systems',
-      ),
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: projects.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isCompact ? 1 : 3,
-        crossAxisSpacing: 18,
-        mainAxisSpacing: 18,
-        childAspectRatio: isCompact ? 1.7 : 1.45,
-      ),
-      itemBuilder: (context, index) => projects[index],
-    );
-  }
-}
-
-class _ProjectCard extends StatelessWidget {
-  const _ProjectCard({
-    required this.title,
-    required this.description,
-    required this.tag,
-  });
-
-  final String title;
-  final String description;
-  final String tag;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.surface.withOpacity(0.82),
-            theme.colorScheme.surface.withOpacity(0.62),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withOpacity(0.7),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  tag,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            description,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              height: 1.6,
-              color: theme.colorScheme.onSurface.withOpacity(0.75),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _ActionButton extends StatelessWidget {
   const _ActionButton({
     required this.label,
@@ -509,16 +278,18 @@ class _ActionButton extends StatelessWidget {
     return FilledButton(
       onPressed: onPressed,
       style: FilledButton.styleFrom(
-        backgroundColor: filled ? theme.colorScheme.primary : Colors.transparent,
-        foregroundColor: filled ? theme.colorScheme.onPrimary : theme.colorScheme.primary,
+        backgroundColor: filled
+            ? theme.colorScheme.primary
+            : Colors.transparent,
+        foregroundColor: filled
+            ? theme.colorScheme.onPrimary
+            : theme.colorScheme.primary,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
           side: filled
               ? BorderSide.none
-              : BorderSide(
-                  color: theme.colorScheme.primary.withOpacity(0.5),
-                ),
+              : BorderSide(color: theme.colorScheme.primary.withOpacity(0.5)),
         ),
       ),
       child: Text(label),
