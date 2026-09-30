@@ -37,6 +37,7 @@ dependencies:
   shadcn_ui: ^0.56.3
   go_router: ^18.0.1
   url_launcher: ^6.3.2
+  dev_icons: ^1.0.0
 
 dev_dependencies:
   flutter_test:
