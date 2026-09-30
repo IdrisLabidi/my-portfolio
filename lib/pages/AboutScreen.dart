@@ -82,15 +82,12 @@ class AboutScreen extends StatelessWidget {
               const _SectionLabel(
                 icon: Icons.explore_rounded,
                 title: 'Interests',
-                subtitle: 'Curious about the systems and experiences behind the screen.',
+                subtitle: 'What I am building, learning, and enjoying beyond the code.',
               ),
               const SizedBox(height: 22),
               const _Reveal(
                 delay: Duration(milliseconds: 520),
-                child: _AboutCard(
-                body:
-                    'Artificial intelligence, UX design, web development, cloud computing, DevOps, application security, microservices, and distributed systems.',
-                ),
+                child: _InterestsGrid(),
               ),
             ],
           ),
@@ -371,124 +368,83 @@ class _EducationItem extends StatelessWidget {
     final theme = Theme.of(context);
     final accent = theme.colorScheme.primary;
 
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            width: 34,
-            child: Column(
-              children: [
-                Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: isCurrent ? accent : theme.colorScheme.surface,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: accent, width: 3),
-                  ),
-                ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(width: 2, color: accent.withOpacity(0.35)),
-                  ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(22),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withOpacity(0.72),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withOpacity(0.7),
-                ),
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: 30,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    period,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: accent,
-                      fontWeight: FontWeight.w700,
+                  Container(
+                    width: 14,
+                    height: 14,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(
+                      color: isCurrent ? accent : theme.colorScheme.surface,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: accent, width: 3),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    degree,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const _UniversityLogoPlaceholder(),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              institution,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              university,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(
-                                  0.72,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                  if (!isLast)
+                    Expanded(
+                      child: Container(
+                        width: 2,
+                        margin: const EdgeInsets.only(top: 6),
+                        color: accent.withValues(alpha: 0.3),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  Text(
-                    detail,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      height: 1.55,
-                      color: theme.colorScheme.onSurface.withOpacity(0.76),
                     ),
-                  ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _UniversityLogoPlaceholder extends StatelessWidget {
-  const _UniversityLogoPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
-      ),
-      child: Icon(
-        Icons.school_rounded,
-        color: theme.colorScheme.primary,
-        size: 26,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      period,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: accent,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      degree,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$institution · $university',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.68,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      detail,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        height: 1.45,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.58,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -797,30 +753,142 @@ class _SkillCard extends StatelessWidget {
   IconData _iconFor(String slug) => _icons[slug] ?? _fallbackIcon;
 }
 
-class _AboutCard extends StatelessWidget {
-  const _AboutCard({required this.body});
+class _InterestsGrid extends StatelessWidget {
+  const _InterestsGrid();
 
-  final String body;
+  @override
+  Widget build(BuildContext context) {
+    const interests = [
+      _Interest(
+        icon: Icons.storage_rounded,
+        title: 'Backend first',
+        description:
+            'I enjoy designing APIs, working with data, and building reliable systems more than frontend work.',
+        color: Color(0xFF8B5CF6),
+      ),
+      _Interest(
+        icon: Icons.school_rounded,
+        title: 'Currently learning',
+        description:
+            'Exploring Flutter for cross-platform apps and AWS for cloud architecture and deployment.',
+        color: Color(0xFF0EA5E9),
+      ),
+      _Interest(
+        icon: Icons.groups_rounded,
+        title: 'Campus community',
+        description:
+            'Interested in joining on-campus IT clubs, meeting builders, and learning through collaboration.',
+        color: Color(0xFFF97316),
+      ),
+      _Interest(
+        icon: Icons.terminal_rounded,
+        title: 'Linux & open source',
+        description:
+            'I love Linux and the freedom, curiosity, and collaboration that make open-source software special.',
+        color: Color(0xFF22C55E),
+      ),
+      _Interest(
+        icon: Icons.directions_bike_rounded,
+        title: 'Outside the screen',
+        description:
+            'Cycling, jogging, and FPS games like Counter-Strike and Call of Duty keep me moving and competitive.',
+        color: Color(0xFFEC4899),
+      ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = constraints.maxWidth >= 700 ? 2 : 1;
+        final gap = 14.0;
+        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (final interest in interests)
+              SizedBox(
+                width: width,
+                child: _InterestCard(interest: interest),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _Interest {
+  const _Interest({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String title;
+  final String description;
+  final Color color;
+}
+
+class _InterestCard extends StatelessWidget {
+  const _InterestCard({required this.interest});
+
+  final _Interest interest;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.72),
+        color: theme.colorScheme.surface.withValues(alpha: 0.72),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: theme.colorScheme.outlineVariant.withOpacity(0.7),
+          color: interest.color.withValues(alpha: 0.32),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: interest.color.withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Text(
-        body,
-        style: theme.textTheme.bodyLarge?.copyWith(
-          height: 1.6,
-          color: theme.colorScheme.onSurface.withOpacity(0.76),
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(11),
+            decoration: BoxDecoration(
+              color: interest.color.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(interest.icon, color: interest.color, size: 23),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  interest.title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  interest.description,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    height: 1.45,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.66),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
